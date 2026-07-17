@@ -1,0 +1,664 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Atados</title>
+  <style>
+    :root {
+      --bg: #f6f5ef;
+      --surface: #ffffff;
+      --surface-2: #f0eee6;
+      --ink: #1e2420;
+      --muted: #667066;
+      --line: #d8d5c8;
+      --green: #2f7d59;
+      --green-2: #dff1e6;
+      --red: #a33d3d;
+      --red-2: #f8dddd;
+      --amber: #a76820;
+      --amber-2: #f7ead4;
+      --blue: #2c637f;
+      --blue-2: #dcecf2;
+      --shadow: 0 16px 34px rgba(47, 50, 43, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+    main {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 10px 0 20px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.1;
+      font-weight: 750;
+    }
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 740px;
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      gap: 10px;
+      align-items: end;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    input[type="date"] {
+      height: 38px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 0 10px;
+      font: inherit;
+    }
+    button {
+      height: 38px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      padding: 0 12px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: white;
+    }
+    .quick {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .quick button {
+      height: 30px;
+      font-size: 12px;
+      font-weight: 650;
+      background: var(--surface-2);
+    }
+    .statusbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+    .kpis {
+      grid-template-columns: repeat(6, minmax(150px, 1fr));
+    }
+    .two-col {
+      grid-template-columns: minmax(0, 1.3fr) minmax(360px, 0.7fr);
+      margin-top: 14px;
+    }
+    section, .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .card {
+      min-height: 116px;
+      padding: 14px;
+      display: grid;
+      align-content: space-between;
+      gap: 12px;
+    }
+    .card .label, section .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+    .value {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    section {
+      padding: 16px;
+      min-width: 0;
+      overflow-x: auto;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+    h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    td.num, th.num { text-align: right; }
+    tr:last-child td { border-bottom: 0; }
+    .bar-list {
+      display: grid;
+      gap: 12px;
+    }
+    .bar-row {
+      display: grid;
+      gap: 6px;
+    }
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .track {
+      height: 9px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      background: var(--green);
+      min-width: 1px;
+    }
+    .alert-list {
+      display: grid;
+      gap: 10px;
+    }
+    .alert {
+      border: 1px solid var(--line);
+      padding: 12px;
+      background: var(--surface-2);
+    }
+    .alert.risk { background: var(--red-2); border-color: #e8bcbc; }
+    .alert.attention { background: var(--amber-2); border-color: #e5c896; }
+    .alert.opportunity { background: var(--green-2); border-color: #b7d6c2; }
+    .alert-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .notes {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .notes ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+    .campaign-area {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 2px solid var(--green);
+    }
+    .campaign-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .campaign-title h2 { margin: 0 0 4px; font-size: 24px; }
+    .source-list { display: grid; gap: 8px; }
+    .source-row {
+      display: grid;
+      grid-template-columns: minmax(140px, .8fr) minmax(110px, .4fr) minmax(240px, 1.8fr);
+      gap: 10px;
+      align-items: start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .source-row:last-child { border-bottom: 0; }
+    .status-available, .status-confirmed, .status-derivable { color: #176b3a; }
+    .status-unavailable, .status-absent { color: #9b3f26; }
+    .status-pending_validation, .status-not_mature { color: #8a6515; }
+    .empty, .error {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      background: var(--surface);
+    }
+    .error { color: var(--red); }
+    .skeleton {
+      animation: pulse 1.2s infinite ease-in-out;
+      background: linear-gradient(90deg, var(--surface-2), #fff, var(--surface-2));
+      min-height: 120px;
+      border: 1px solid var(--line);
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .65; }
+      50% { opacity: 1; }
+    }
+    @media (max-width: 1100px) {
+      header { display: grid; }
+      .toolbar { width: 100%; grid-template-columns: 1fr 1fr auto; }
+      .kpis { grid-template-columns: repeat(3, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      main { padding: 14px; }
+      .toolbar { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr; }
+      table { font-size: 12px; }
+      th, td { white-space: normal; }
+      .value { font-size: 24px; }
+      .source-row { grid-template-columns: 1fr; gap: 3px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Dashboard de doacoes PF</h1>
+        <p class="subtitle">Snapshot publico de conversao, perdas, ticket e recorrencia. A pagina contem somente dados agregados e nao consulta a TrackMob.</p>
+      </div>
+      <div class="toolbar" aria-label="Informacoes do snapshot">
+        <div class="card" style="grid-column: 1 / -1; padding: 12px 14px;">
+          <div class="label">Snapshot publico</div>
+          <div><strong>01/11/2024 a 16/07/2026</strong></div>
+          <div class="hint">Atualizado em 16/07/2026 as 14:48. Atualizacao manual.</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="statusbar">
+      <div id="periodLabel">Periodo</div>
+      <div>
+        <span class="pill" id="modePill">Carregando</span>
+        <span class="pill" id="sourcePill">TrackMob</span>
+      </div>
+    </div>
+
+    <div id="message"></div>
+    <div id="dashboard">
+      <div class="grid kpis">
+        <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+        <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      </div>
+    </div>
+  </main>
+
+  <script id="dashboard-data" type="application/json">{"source":"TrackMob","mode":"real","period":{"start_date":"2024-11-01","end_date":"2026-07-16","label":"01/11/2024 a 16/07/2026","date_semantics":"Tentativas filtradas por data de criacao da cobranca na TrackMob."},"summary":{"attempted_people":314,"paid_people":270,"total_charges":1281,"paid_charges":522,"open_charges":535,"failure_charges":211,"attempted_amount":"R$ 309.871,24","paid_amount":"R$ 45.001,12","conversion_rate":"86,0%","avg_paid_ticket":"R$ 86,21","medium_high_revenue":"R$ 29.363,68","medium_high_share":"65,3%","medium_high_people":92},"tickets":[{"key":"low","label":"Baixo ticket","rule":"Abaixo de R$ 100","paid_charges":413,"paid_people":181,"paid_amount":"R$ 15.637,44","paid_amount_raw":"15637.44","revenue_share":"34,7%"},{"key":"medium","label":"Medio ticket","rule":"R$ 100 a R$ 499,99","paid_charges":92,"paid_people":75,"paid_amount":"R$ 14.680,46","paid_amount_raw":"14680.46","revenue_share":"32,6%"},{"key":"high","label":"Alto ticket","rule":"R$ 500 ou mais","paid_charges":17,"paid_people":17,"paid_amount":"R$ 14.683,22","paid_amount_raw":"14683.22","revenue_share":"32,6%"}],"methods":[{"method":"Boleto","attempts":119,"attempted_people":11,"paid_charges":3,"paid_people":3,"open_charges":103,"failure_charges":0,"attempted_amount":"R$ 10.953,00","paid_amount":"R$ 404,00","conversion_rate":"27,3%"},{"method":"CreditCard","attempts":478,"attempted_people":68,"paid_charges":267,"paid_people":57,"open_charges":0,"failure_charges":211,"attempted_amount":"R$ 22.549,29","paid_amount":"R$ 13.429,29","conversion_rate":"83,8%"},{"method":"Pix","attempts":683,"attempted_people":239,"paid_charges":252,"paid_people":213,"open_charges":431,"failure_charges":0,"attempted_amount":"R$ 276.358,95","paid_amount":"R$ 31.167,83","conversion_rate":"89,1%"},{"method":"PixAutomatic","attempts":1,"attempted_people":1,"paid_charges":0,"paid_people":0,"open_charges":1,"failure_charges":0,"attempted_amount":"R$ 10,00","paid_amount":"R$ 0,00","conversion_rate":"0,0%"}],"statuses":[{"status":"Expired","label":"Expirado","group":"Perda/estorno","charges":13,"people":5,"attempted_amount":"R$ 1.350,00","paid_amount":"R$ 0,00"},{"status":"Generated","label":"Gerado","group":"Em aberto","charges":493,"people":77,"attempted_amount":"R$ 250.725,12","paid_amount":"R$ 0,00"},{"status":"HardBounce","label":"Falha grave","group":"Falha","charges":139,"people":26,"attempted_amount":"R$ 6.820,00","paid_amount":"R$ 0,00"},{"status":"Overdue","label":"Vencido","group":"Em aberto","charges":42,"people":5,"attempted_amount":"R$ 3.675,00","paid_amount":"R$ 0,00"},{"status":"Paid","label":"Pago","group":"Pago","charges":522,"people":270,"attempted_amount":"R$ 45.001,12","paid_amount":"R$ 45.001,12"},{"status":"SoftBounce","label":"Falha leve","group":"Falha","charges":72,"people":7,"attempted_amount":"R$ 2.300,00","paid_amount":"R$ 0,00"}],"recurrence":{"intention_people":183,"monthly_intention_people":77,"recurring_paid_people":148,"recurrence_confirmed_people":39,"recurring_paid_amount":"R$ 22.816,35","confidence":"exploratory","note":"Intencao usa frequency da doacao. Recorrencia confirmada exige pagamentos em mais de um mes dentro do periodo filtrado; pode subestimar recorrencia real em janelas curtas."},"daily":[{"date":"2024-11-01","attempts":15,"paid_charges":4,"attempted_people":6,"paid_people":4,"paid_amount":"R$ 80,00","paid_amount_raw":"80.00"},{"date":"2024-11-02","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-04","attempts":5,"paid_charges":4,"attempted_people":5,"paid_people":4,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2024-11-05","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2024-11-06","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2024-11-07","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-08","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-11","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-12","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 133,00","paid_amount_raw":"133.00"},{"date":"2024-11-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-15","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-16","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-17","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 30,00","paid_amount_raw":"30.00"},{"date":"2024-11-18","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2024-11-19","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-20","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-22","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-24","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-26","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-27","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-11-28","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2024-11-29","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2024-11-30","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-01","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2024-12-02","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-04","attempts":4,"paid_charges":4,"attempted_people":4,"paid_people":4,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2024-12-05","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2024-12-06","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2024-12-07","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2024-12-08","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-10","attempts":2,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-11","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-15","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 70,00","paid_amount_raw":"70.00"},{"date":"2024-12-16","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-17","attempts":2,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-18","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2024-12-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-20","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-22","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-23","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 300,00","paid_amount_raw":"300.00"},{"date":"2024-12-24","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-26","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 349,00","paid_amount_raw":"349.00"},{"date":"2024-12-27","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 500,00","paid_amount_raw":"500.00"},{"date":"2024-12-28","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-30","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2024-12-31","attempts":4,"paid_charges":4,"attempted_people":4,"paid_people":4,"paid_amount":"R$ 280,00","paid_amount_raw":"280.00"},{"date":"2025-01-01","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-01-02","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-03","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-01-04","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-05","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-06","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-01-07","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-08","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-11","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-12","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 133,00","paid_amount_raw":"133.00"},{"date":"2025-01-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-15","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 70,00","paid_amount_raw":"70.00"},{"date":"2025-01-16","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 570,00","paid_amount_raw":"570.00"},{"date":"2025-01-17","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-01-18","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-20","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-01-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-22","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-24","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-01-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-26","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-27","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-28","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-01-30","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-01-31","attempts":4,"paid_charges":4,"attempted_people":4,"paid_people":4,"paid_amount":"R$ 205,00","paid_amount_raw":"205.00"},{"date":"2025-02-01","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 255,00","paid_amount_raw":"255.00"},{"date":"2025-02-02","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-02-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-04","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-02-05","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-02-06","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-02-07","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-08","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-11","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-14","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 70,00","paid_amount_raw":"70.00"},{"date":"2025-02-15","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-16","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-02-17","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 1.000,00","paid_amount_raw":"1000.00"},{"date":"2025-02-18","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-02-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-20","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 27,00","paid_amount_raw":"27.00"},{"date":"2025-02-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-22","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-24","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-25","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-02-26","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-27","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-02-28","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 80,00","paid_amount_raw":"80.00"},{"date":"2025-03-01","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-02","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-03","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 250,00","paid_amount_raw":"250.00"},{"date":"2025-03-04","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-03-05","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-03-06","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-03-07","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 1.080,00","paid_amount_raw":"1080.00"},{"date":"2025-03-08","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-03-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-11","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-14","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 70,00","paid_amount_raw":"70.00"},{"date":"2025-03-15","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-16","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 30,00","paid_amount_raw":"30.00"},{"date":"2025-03-17","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-03-18","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 533,30","paid_amount_raw":"533.30"},{"date":"2025-03-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-20","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-03-21","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 1.011,11","paid_amount_raw":"1011.11"},{"date":"2025-03-22","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-03-23","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 30,00","paid_amount_raw":"30.00"},{"date":"2025-03-24","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-25","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-03-26","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-03-27","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-03-28","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2025-03-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-30","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-03-31","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 130,00","paid_amount_raw":"130.00"},{"date":"2025-04-01","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-04-02","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-04","attempts":4,"paid_charges":4,"attempted_people":4,"paid_people":4,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2025-04-05","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-06","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-04-07","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-08","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-11","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-13","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-04-14","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 250,00","paid_amount_raw":"250.00"},{"date":"2025-04-15","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-16","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-17","attempts":4,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-04-18","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-19","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2025-04-20","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-21","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2025-04-22","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-24","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-25","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-26","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-04-27","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-28","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-04-30","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 55,00","paid_amount_raw":"55.00"},{"date":"2025-05-01","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-05-02","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-05-03","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 500,00","paid_amount_raw":"500.00"},{"date":"2025-05-04","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-05","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-05-06","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 85,26","paid_amount_raw":"85.26"},{"date":"2025-05-07","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 30,00","paid_amount_raw":"30.00"},{"date":"2025-05-08","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-11","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-05-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-14","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-05-15","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-16","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-05-17","attempts":2,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-18","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-20","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-22","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-23","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-05-24","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-05-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-26","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-28","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-05-30","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 80,00","paid_amount_raw":"80.00"},{"date":"2025-05-31","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-01","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-02","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-03","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 585,00","paid_amount_raw":"585.00"},{"date":"2025-06-04","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-06-05","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-06-06","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-06-07","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-08","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 140,00","paid_amount_raw":"140.00"},{"date":"2025-06-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-11","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-13","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2025-06-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-15","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-06-16","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-06-17","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-06-18","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-06-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-20","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-22","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-06-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-24","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-06-25","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-06-26","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-06-27","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-06-28","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 193,26","paid_amount_raw":"193.26"},{"date":"2025-06-29","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 1.100,00","paid_amount_raw":"1100.00"},{"date":"2025-06-30","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 155,00","paid_amount_raw":"155.00"},{"date":"2025-07-01","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 175,00","paid_amount_raw":"175.00"},{"date":"2025-07-02","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 70,00","paid_amount_raw":"70.00"},{"date":"2025-07-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-04","attempts":6,"paid_charges":4,"attempted_people":6,"paid_people":4,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2025-07-05","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 1.172,11","paid_amount_raw":"1172.11"},{"date":"2025-07-06","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-07-07","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-08","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-11","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 525,00","paid_amount_raw":"525.00"},{"date":"2025-07-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-15","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-07-16","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-17","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-07-18","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-07-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-20","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-22","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-23","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 3.200,00","paid_amount_raw":"3200.00"},{"date":"2025-07-24","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-25","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-26","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-28","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-07-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-30","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-07-31","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 30,00","paid_amount_raw":"30.00"},{"date":"2025-08-01","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2025-08-02","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-08-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-04","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-08-05","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-08-06","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-08-07","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-08-08","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-09","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-08-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-11","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 1.030,00","paid_amount_raw":"1030.00"},{"date":"2025-08-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-13","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-08-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-15","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-08-16","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-17","attempts":2,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-18","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-08-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-20","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-08-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-22","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-23","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2025-08-24","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-08-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-26","attempts":4,"paid_charges":0,"attempted_people":4,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-08-27","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 121,00","paid_amount_raw":"121.00"},{"date":"2025-08-28","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-08-29","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 155,00","paid_amount_raw":"155.00"},{"date":"2025-08-30","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-08-31","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-01","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-09-02","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-09-03","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 55,00","paid_amount_raw":"55.00"},{"date":"2025-09-04","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-09-05","attempts":6,"paid_charges":3,"attempted_people":6,"paid_people":3,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2025-09-06","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-07","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-09-08","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 300,00","paid_amount_raw":"300.00"},{"date":"2025-09-09","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-09-10","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 219,00","paid_amount_raw":"219.00"},{"date":"2025-09-11","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-12","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-09-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-15","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-09-16","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-17","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-09-18","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-09-19","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-09-20","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-22","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-09-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-24","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-25","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 65,00","paid_amount_raw":"65.00"},{"date":"2025-09-26","attempts":5,"paid_charges":2,"attempted_people":5,"paid_people":2,"paid_amount":"R$ 160,00","paid_amount_raw":"160.00"},{"date":"2025-09-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-28","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-29","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-09-30","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 155,00","paid_amount_raw":"155.00"},{"date":"2025-10-01","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-10-02","attempts":6,"paid_charges":3,"attempted_people":6,"paid_people":3,"paid_amount":"R$ 500,00","paid_amount_raw":"500.00"},{"date":"2025-10-03","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2025-10-04","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-10-05","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-06","attempts":5,"paid_charges":3,"attempted_people":5,"paid_people":3,"paid_amount":"R$ 135,00","paid_amount_raw":"135.00"},{"date":"2025-10-07","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-08","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-10-09","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-10-10","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-11","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 218,00","paid_amount_raw":"218.00"},{"date":"2025-10-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-13","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-10-14","attempts":3,"paid_charges":3,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-10-15","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-10-16","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-17","attempts":4,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-10-18","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-10-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-20","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-21","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-10-22","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-23","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-24","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-26","attempts":4,"paid_charges":0,"attempted_people":4,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-28","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-10-29","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-10-30","attempts":4,"paid_charges":2,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 175,00","paid_amount_raw":"175.00"},{"date":"2025-10-31","attempts":6,"paid_charges":3,"attempted_people":6,"paid_people":3,"paid_amount":"R$ 205,00","paid_amount_raw":"205.00"},{"date":"2025-11-01","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-11-02","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-03","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2025-11-04","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-11-05","attempts":5,"paid_charges":3,"attempted_people":5,"paid_people":3,"paid_amount":"R$ 100,18","paid_amount_raw":"100.18"},{"date":"2025-11-06","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-11-07","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-11-08","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-11-09","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-11-10","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-11","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-11-12","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 250,00","paid_amount_raw":"250.00"},{"date":"2025-11-13","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-11-14","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 135,00","paid_amount_raw":"135.00"},{"date":"2025-11-15","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-16","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-17","attempts":5,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-11-18","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-11-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-20","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 350,00","paid_amount_raw":"350.00"},{"date":"2025-11-21","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-11-22","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-24","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-25","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-11-26","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-27","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-11-28","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-11-29","attempts":3,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-11-30","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 400,00","paid_amount_raw":"400.00"},{"date":"2025-12-01","attempts":7,"paid_charges":4,"attempted_people":7,"paid_people":4,"paid_amount":"R$ 180,00","paid_amount_raw":"180.00"},{"date":"2025-12-02","attempts":5,"paid_charges":2,"attempted_people":5,"paid_people":2,"paid_amount":"R$ 175,00","paid_amount_raw":"175.00"},{"date":"2025-12-03","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 1.000,00","paid_amount_raw":"1000.00"},{"date":"2025-12-04","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-12-05","attempts":7,"paid_charges":4,"attempted_people":7,"paid_people":4,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2025-12-06","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-07","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2025-12-08","attempts":6,"paid_charges":3,"attempted_people":6,"paid_people":3,"paid_amount":"R$ 555,00","paid_amount_raw":"555.00"},{"date":"2025-12-09","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-12-10","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-12-11","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-12","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-12-13","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-12-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-15","attempts":5,"paid_charges":0,"attempted_people":5,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-16","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 55,00","paid_amount_raw":"55.00"},{"date":"2025-12-17","attempts":6,"paid_charges":4,"attempted_people":5,"paid_people":4,"paid_amount":"R$ 225,00","paid_amount_raw":"225.00"},{"date":"2025-12-18","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2025-12-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-20","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-22","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2025-12-23","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-24","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2025-12-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-26","attempts":6,"paid_charges":0,"attempted_people":6,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-28","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-29","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2025-12-30","attempts":5,"paid_charges":2,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2025-12-31","attempts":7,"paid_charges":2,"attempted_people":6,"paid_people":2,"paid_amount":"R$ 55,00","paid_amount_raw":"55.00"},{"date":"2026-01-01","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-02","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-01-03","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-01-04","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2026-01-05","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2026-01-06","attempts":5,"paid_charges":3,"attempted_people":5,"paid_people":3,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-01-07","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-08","attempts":5,"paid_charges":3,"attempted_people":5,"paid_people":3,"paid_amount":"R$ 140,00","paid_amount_raw":"140.00"},{"date":"2026-01-09","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-01-10","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2026-01-11","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-01-12","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-01-13","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-01-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-15","attempts":4,"paid_charges":0,"attempted_people":4,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-16","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2026-01-17","attempts":3,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-01-18","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-01-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-20","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-01-21","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-01-22","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 77,00","paid_amount_raw":"77.00"},{"date":"2026-01-23","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-24","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-01-25","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-26","attempts":6,"paid_charges":0,"attempted_people":6,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-28","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-01-30","attempts":11,"paid_charges":3,"attempted_people":6,"paid_people":3,"paid_amount":"R$ 155,00","paid_amount_raw":"155.00"},{"date":"2026-01-31","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-01","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-02-02","attempts":5,"paid_charges":2,"attempted_people":5,"paid_people":2,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2026-02-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-04","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-05","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-02-06","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-02-07","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-02-08","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-09","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-02-10","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-11","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-12","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2026-02-13","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-02-14","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-15","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-16","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-17","attempts":5,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-02-18","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2026-02-19","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-20","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-02-21","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-22","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 180,00","paid_amount_raw":"180.00"},{"date":"2026-02-23","attempts":5,"paid_charges":0,"attempted_people":5,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-24","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-25","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-02-26","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-02-27","attempts":13,"paid_charges":4,"attempted_people":8,"paid_people":4,"paid_amount":"R$ 180,00","paid_amount_raw":"180.00"},{"date":"2026-02-28","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-01","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-03-02","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-03-03","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 400,00","paid_amount_raw":"400.00"},{"date":"2026-03-04","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 600,00","paid_amount_raw":"600.00"},{"date":"2026-03-05","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-03-06","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-03-07","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-03-08","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-09","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2026-03-10","attempts":2,"paid_charges":2,"attempted_people":2,"paid_people":2,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2026-03-11","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-12","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-03-13","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-03-14","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-03-15","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-03-16","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-17","attempts":4,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-03-18","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2026-03-19","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-03-20","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-21","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-22","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 28,00","paid_amount_raw":"28.00"},{"date":"2026-03-23","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-03-24","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-25","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-26","attempts":7,"paid_charges":1,"attempted_people":7,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-03-27","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-28","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-29","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-03-30","attempts":9,"paid_charges":2,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 175,00","paid_amount_raw":"175.00"},{"date":"2026-03-31","attempts":8,"paid_charges":1,"attempted_people":7,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-04-01","attempts":14,"paid_charges":4,"attempted_people":14,"paid_people":4,"paid_amount":"R$ 185,00","paid_amount_raw":"185.00"},{"date":"2026-04-02","attempts":10,"paid_charges":4,"attempted_people":10,"paid_people":4,"paid_amount":"R$ 140,00","paid_amount_raw":"140.00"},{"date":"2026-04-03","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-04-04","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-05","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 500,00","paid_amount_raw":"500.00"},{"date":"2026-04-06","attempts":6,"paid_charges":3,"attempted_people":6,"paid_people":3,"paid_amount":"R$ 115,00","paid_amount_raw":"115.00"},{"date":"2026-04-07","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 300,00","paid_amount_raw":"300.00"},{"date":"2026-04-08","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 132,50","paid_amount_raw":"132.50"},{"date":"2026-04-09","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-04-10","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-04-11","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-04-12","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-13","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-04-14","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-04-15","attempts":10,"paid_charges":2,"attempted_people":10,"paid_people":2,"paid_amount":"R$ 225,00","paid_amount_raw":"225.00"},{"date":"2026-04-16","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-17","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-04-18","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-19","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-04-20","attempts":4,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 105,00","paid_amount_raw":"105.00"},{"date":"2026-04-21","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-04-22","attempts":6,"paid_charges":0,"attempted_people":6,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-23","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-24","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 350,00","paid_amount_raw":"350.00"},{"date":"2026-04-25","attempts":6,"paid_charges":2,"attempted_people":6,"paid_people":2,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-04-26","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-28","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-29","attempts":10,"paid_charges":0,"attempted_people":4,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-04-30","attempts":6,"paid_charges":3,"attempted_people":6,"paid_people":3,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2026-05-01","attempts":6,"paid_charges":1,"attempted_people":6,"paid_people":1,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2026-05-02","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-05-03","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-04","attempts":9,"paid_charges":4,"attempted_people":9,"paid_people":4,"paid_amount":"R$ 130,00","paid_amount_raw":"130.00"},{"date":"2026-05-05","attempts":7,"paid_charges":3,"attempted_people":7,"paid_people":3,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-05-06","attempts":5,"paid_charges":2,"attempted_people":5,"paid_people":2,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-05-07","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-08","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-05-09","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-10","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-05-11","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-12","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-05-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-14","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-15","attempts":10,"paid_charges":5,"attempted_people":10,"paid_people":5,"paid_amount":"R$ 280,00","paid_amount_raw":"280.00"},{"date":"2026-05-16","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-17","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-05-18","attempts":5,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-05-19","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2026-05-20","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 105,00","paid_amount_raw":"105.00"},{"date":"2026-05-21","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-05-22","attempts":4,"paid_charges":0,"attempted_people":4,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-23","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 200,00","paid_amount_raw":"200.00"},{"date":"2026-05-24","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-05-25","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-26","attempts":9,"paid_charges":2,"attempted_people":9,"paid_people":2,"paid_amount":"R$ 86,00","paid_amount_raw":"86.00"},{"date":"2026-05-27","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 80,00","paid_amount_raw":"80.00"},{"date":"2026-05-28","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-05-29","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-05-30","attempts":9,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-05-31","attempts":5,"paid_charges":1,"attempted_people":5,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-06-01","attempts":9,"paid_charges":4,"attempted_people":9,"paid_people":4,"paid_amount":"R$ 178,00","paid_amount_raw":"178.00"},{"date":"2026-06-02","attempts":3,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-06-03","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 250,00","paid_amount_raw":"250.00"},{"date":"2026-06-04","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-05","attempts":9,"paid_charges":3,"attempted_people":8,"paid_people":3,"paid_amount":"R$ 80,00","paid_amount_raw":"80.00"},{"date":"2026-06-06","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-07","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-08","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-09","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-06-10","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 30,00","paid_amount_raw":"30.00"},{"date":"2026-06-11","attempts":2,"paid_charges":1,"attempted_people":2,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-06-12","attempts":5,"paid_charges":2,"attempted_people":5,"paid_people":2,"paid_amount":"R$ 225,00","paid_amount_raw":"225.00"},{"date":"2026-06-13","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-14","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-06-15","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-06-16","attempts":2,"paid_charges":2,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-06-17","attempts":3,"paid_charges":3,"attempted_people":3,"paid_people":3,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-06-18","attempts":4,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-06-19","attempts":6,"paid_charges":4,"attempted_people":5,"paid_people":4,"paid_amount":"R$ 205,00","paid_amount_raw":"205.00"},{"date":"2026-06-20","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 150,00","paid_amount_raw":"150.00"},{"date":"2026-06-21","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-22","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-06-23","attempts":3,"paid_charges":2,"attempted_people":3,"paid_people":2,"paid_amount":"R$ 525,00","paid_amount_raw":"525.00"},{"date":"2026-06-24","attempts":5,"paid_charges":2,"attempted_people":5,"paid_people":2,"paid_amount":"R$ 125,00","paid_amount_raw":"125.00"},{"date":"2026-06-25","attempts":6,"paid_charges":1,"attempted_people":6,"paid_people":1,"paid_amount":"R$ 75,00","paid_amount_raw":"75.00"},{"date":"2026-06-26","attempts":7,"paid_charges":2,"attempted_people":6,"paid_people":2,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-06-27","attempts":1,"paid_charges":0,"attempted_people":1,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-28","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-29","attempts":10,"paid_charges":0,"attempted_people":4,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-06-30","attempts":9,"paid_charges":4,"attempted_people":9,"paid_people":4,"paid_amount":"R$ 400,00","paid_amount_raw":"400.00"},{"date":"2026-07-01","attempts":9,"paid_charges":3,"attempted_people":9,"paid_people":3,"paid_amount":"R$ 100,00","paid_amount_raw":"100.00"},{"date":"2026-07-02","attempts":4,"paid_charges":2,"attempted_people":4,"paid_people":2,"paid_amount":"R$ 105,00","paid_amount_raw":"105.00"},{"date":"2026-07-03","attempts":6,"paid_charges":1,"attempted_people":6,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-07-04","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-07-05","attempts":4,"paid_charges":1,"attempted_people":3,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"},{"date":"2026-07-06","attempts":8,"paid_charges":1,"attempted_people":6,"paid_people":1,"paid_amount":"R$ 50,00","paid_amount_raw":"50.00"},{"date":"2026-07-07","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 344,40","paid_amount_raw":"344.40"},{"date":"2026-07-08","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-07-09","attempts":4,"paid_charges":3,"attempted_people":4,"paid_people":3,"paid_amount":"R$ 80,00","paid_amount_raw":"80.00"},{"date":"2026-07-10","attempts":7,"paid_charges":2,"attempted_people":7,"paid_people":2,"paid_amount":"R$ 225,00","paid_amount_raw":"225.00"},{"date":"2026-07-11","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-07-12","attempts":0,"paid_charges":0,"attempted_people":0,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-07-13","attempts":4,"paid_charges":1,"attempted_people":4,"paid_people":1,"paid_amount":"R$ 330,00","paid_amount_raw":"330.00"},{"date":"2026-07-14","attempts":2,"paid_charges":0,"attempted_people":2,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-07-15","attempts":3,"paid_charges":0,"attempted_people":3,"paid_people":0,"paid_amount":"R$ 0,00","paid_amount_raw":"0.00"},{"date":"2026-07-16","attempts":1,"paid_charges":1,"attempted_people":1,"paid_people":1,"paid_amount":"R$ 25,00","paid_amount_raw":"25.00"}],"alerts":[{"title":"Pix em aberto","body":"431 cobranca(s) Pix ainda nao paga(s), somando R$ 245.191,12 em valor tentado.","level":"attention"},{"title":"Falhas em tickets relevantes","body":"5 falha(s) acima de R$ 100. Vale revisar mensagens de erro na TrackMob.","level":"risk"}],"notes":["Status pago na API da Plataforma TrackMob: Paid.","Generated/Pending/Scheduled/Overdue entram como cobrancas em aberto.","SoftBounce/HardBounce/Error entram como falhas de pagamento.","Nao ha endpoint claro de leads; a V1 usa cobrancas criadas como proxy de tentativa de doacao.","Faixa de ticket usa o valor pago da cobranca confirmada observada no periodo.","Amostra de frequency parcial: havia mais de 250 doacoes unicas no periodo."],"campaigns":null}</script>
+  <script>
+    const dashboard = document.getElementById("dashboard");
+    const message = document.getElementById("message");
+    const startDate = document.getElementById("startDate");
+    const endDate = document.getElementById("endDate");
+    const periodLabel = document.getElementById("periodLabel");
+    const modePill = document.getElementById("modePill");
+    const sourcePill = document.getElementById("sourcePill");
+
+    function iso(date) {
+      return date.toISOString().slice(0, 10);
+    }
+
+    function addDays(date, days) {
+      const next = new Date(date);
+      next.setDate(next.getDate() + days);
+      return next;
+    }
+
+    function setPreset(preset) {
+      const today = new Date();
+      if (preset === "today") {
+        startDate.value = iso(today);
+        endDate.value = iso(today);
+      } else if (preset === "yesterday") {
+        const yesterday = addDays(today, -1);
+        startDate.value = iso(yesterday);
+        endDate.value = iso(yesterday);
+      } else if (preset === "7") {
+        startDate.value = iso(addDays(today, -6));
+        endDate.value = iso(today);
+      } else if (preset === "30") {
+        startDate.value = iso(addDays(today, -29));
+        endDate.value = iso(today);
+      } else if (preset === "month") {
+        startDate.value = iso(new Date(today.getFullYear(), today.getMonth(), 1));
+        endDate.value = iso(today);
+      }
+    }
+
+    function loading() {
+      message.innerHTML = "";
+      modePill.textContent = "Carregando";
+      dashboard.innerHTML = `
+        <div class="grid kpis">
+          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+        </div>`;
+    }
+
+    const STATIC_DASHBOARD_DATA = JSON.parse(
+      document.getElementById("dashboard-data").textContent
+    );
+
+    function loadDashboard() {
+      render(STATIC_DASHBOARD_DATA);
+    }
+
+    function render(data) {
+      periodLabel.textContent = `${data.period.label} | ${data.period.date_semantics}`;
+      modePill.textContent = "Snapshot publico";
+      sourcePill.textContent = data.source;
+      message.innerHTML = "";
+      const s = data.summary;
+
+      if (s.total_charges === 0) {
+        dashboard.innerHTML = `<div class="empty">Nenhuma cobranca encontrada no periodo selecionado.</div>${campaignDashboard(data.campaigns)}`;
+        return;
+      }
+
+      dashboard.innerHTML = `
+        <div class="grid kpis">
+          ${kpi("Arrecadacao paga", s.paid_amount, "Soma de paidAmount em cobrancas Paid criadas no periodo.")}
+          ${kpi("Pessoas tentaram", s.attempted_people, `${s.total_charges} cobranca(s) iniciada(s).`)}
+          ${kpi("Pessoas pagaram", s.paid_people, `${s.paid_charges} cobranca(s) com status Paid.`)}
+          ${kpi("Conversao", s.conversion_rate, "Pessoas pagas / pessoas com tentativa.")}
+          ${kpi("Medio/alto ticket", s.medium_high_people, `${s.medium_high_revenue} | ${s.medium_high_share} da arrecadacao.`)}
+          ${kpi("Ticket medio pago", s.avg_paid_ticket, "Media por cobranca paga.")}
+        </div>
+
+        <div class="grid two-col">
+          ${section("Faixas de ticket", "Classificacao pelo valor pago observado no periodo.", ticketTable(data.tickets))}
+          ${section("Alertas de oportunidade", "Sinais acionaveis derivados dos status reais.", alerts(data.alerts))}
+        </div>
+
+        <div class="grid two-col">
+          ${section("Metodos de pagamento", "Tentativas, pagamentos e perdas por meio.", methodTable(data.methods))}
+          ${section("Perdas no fluxo", "Status da cobranca na API da Plataforma TrackMob.", statusTable(data.statuses))}
+        </div>
+
+        <div class="grid two-col">
+          ${section("Evolucao diaria", "Criacao de cobrancas no periodo.", dailyBars(data.daily))}
+          ${section("Recorrencia", "Exploratorio: depende de frequency e da janela filtrada.", recurrenceBlock(data.recurrence))}
+        </div>
+
+        <section class="notes">
+          <strong>Notas de leitura</strong>
+          <ul>${data.notes.map(note => `<li>${escapeHtml(note)}</li>`).join("")}</ul>
+        </section>
+
+        ${campaignDashboard(data.campaigns)}
+      `;
+    }
+
+    function campaignDashboard(campaign) {
+      if (!campaign) return "";
+      const summary = campaign.summary || {};
+      const executive = `
+        <div class="grid kpis">
+          ${campaignKpi("Entradas", summary.entries)}
+          ${campaignKpi("Pessoas", summary.people)}
+          ${campaignKpi("Alcancadas", summary.reached)}
+          ${campaignKpi("Conversao D30", summary.conversion_30)}
+          ${campaignKpi("Confirmacao D60", summary.confirmation_60)}
+          ${campaignKpi("Receita D30", summary.revenue_30)}
+          ${campaignKpi("Receita D60", summary.revenue_60)}
+          ${campaignKpi("Receita por entrada", summary.revenue_per_entry_30)}
+          ${campaignKpi("Tempo ate conversao", summary.median_days_to_conversion)}
+          ${campaignKpi("Retencao D90", summary.retention_90)}
+        </div>`;
+      const availability = availabilityBlock(campaign.availability || []);
+      const notes = `<section class="notes"><strong>Como ler</strong><ul>${(campaign.notes || []).map(note => `<li>${escapeHtml(note)}</li>`).join("")}</ul></section>`;
+
+      if (campaign.status !== "available") {
+        return `
+          <div class="campaign-area">
+            ${campaignHeading(campaign)}
+            ${executive}
+            <div class="empty">Dados de campanha ainda indisponiveis. A estrutura esta pronta, mas nenhuma metrica foi estimada.</div>
+            ${section("Fontes e cobertura", "O status distingue dado confirmado, derivavel, ausente e pendente de validacao.", availability)}
+            ${notes}
+          </div>`;
+      }
+
+      return `
+        <div class="campaign-area">
+          ${campaignHeading(campaign)}
+          ${executive}
+          ${section("Funil da jornada", "Abertura e clique sao diagnosticos; conversao e confirmacao usam pagamentos TrackMob.", campaignFunnel(campaign.funnel || []))}
+          ${section("Evolucao por coorte", "Coortes usam o mes de entrada. D90 aparece apenas para bases maduras.", campaignCohorts(campaign.cohorts || []))}
+          ${section("Comparacao por segmento", "Segmentacao preservada no momento da entrada; grupos pequenos sao suprimidos.", campaignSegments(campaign.segments || []))}
+          ${section("Campanha, etapa e e-mail", "Metricas de comunicacao sao diagnosticas e nao recebem credito causal pela conversao.", campaignEmails(campaign.emails || []))}
+          <div class="grid two-col">
+            ${section("Metricas de cuidado", "Descadastro, bounce e reclamacao usam pessoas unicas por entrada.", campaignCare(campaign.care || []))}
+            ${section("Qualidade e atribuicao", "Sinais que limitam ou qualificam a leitura dos resultados.", campaignQuality(campaign.quality || {}))}
+          </div>
+          ${section("Fontes e cobertura", "O dashboard nao transforma ausencia de dado em zero.", availability)}
+          ${notes}
+        </div>`;
+    }
+
+    function campaignHeading(campaign) {
+      const status = campaign.status === "available" ? "Dados disponiveis" : "Coleta pendente";
+      return `<div class="campaign-title"><div><h2>Resultados das campanhas</h2><div class="subtitle">${escapeHtml(campaign.journey.label)} | coortes por entrada</div></div><span class="pill status-${escapeHtml(campaign.status)}">${status}</span></div>`;
+    }
+
+    function campaignKpi(label, metric) {
+      const value = metric && metric.display ? metric.display : "Indisponivel";
+      const definition = metric && metric.definition ? metric.definition : "Fonte ainda nao instrumentada.";
+      const status = metric && metric.status ? metric.status : "unavailable";
+      return `<div class="card"><div class="label">${escapeHtml(label)}</div><div class="value status-${escapeHtml(status)}">${escapeHtml(value)}</div><div class="hint">${escapeHtml(definition)}</div></div>`;
+    }
+
+    function campaignFunnel(rows) {
+      if (!rows.length) return `<div class="empty">Funil indisponivel.</div>`;
+      return table(["Etapa", "Pessoas", "% das entradas"], rows.map(row => [
+        escapeHtml(row.stage), escapeHtml(row.display), escapeHtml(row.rate_from_entries)
+      ]));
+    }
+
+    function campaignCohorts(rows) {
+      if (!rows.length) return `<div class="empty">Nenhuma coorte no periodo.</div>`;
+      return table(["Coorte", "Entradas", "Conversao D30", "Confirmacao D60", "Receita D30", "Retencao D90"], rows.map(row => [
+        escapeHtml(row.cohort), row.entries, escapeHtml(row.conversion_30),
+        escapeHtml(row.confirmation_60), escapeHtml(row.revenue_30), escapeHtml(row.retention_90)
+      ]));
+    }
+
+    function campaignSegments(rows) {
+      if (!rows.length) return `<div class="empty">Segmentos indisponiveis.</div>`;
+      return table(["Dimensao", "Segmento", "Entradas", "Conversao D30", "Estado atual confirmado"], rows.map(row => [
+        escapeHtml(row.dimension), escapeHtml(row.segment), escapeHtml(row.entries_display),
+        escapeHtml(row.conversion_30), escapeHtml(row.current_confirmed)
+      ]));
+    }
+
+    function campaignEmails(rows) {
+      if (!rows.length) return `<div class="empty">Eventos por e-mail ainda indisponiveis.</div>`;
+      return table(["Campanha", "Etapa", "E-mail", "Envios", "Entregas", "Abertura", "Clique", "Descad.", "Hard bounce", "Soft bounce"], rows.map(row => [
+        escapeHtml(row.campaign), escapeHtml(row.step), escapeHtml(row.email), row.sent,
+        row.delivered, escapeHtml(row.open_rate), escapeHtml(row.click_rate), row.unsubscribed,
+        row.hard_bounce, row.soft_bounce
+      ]));
+    }
+
+    function campaignCare(rows) {
+      if (!rows.length) return `<div class="empty">Metricas de cuidado indisponiveis.</div>`;
+      return table(["Metrica", "Pessoas", "Taxa", "Denominador"], rows.map(row => [
+        escapeHtml(row.metric), row.people, escapeHtml(row.rate), row.denominator
+      ]));
+    }
+
+    function campaignQuality(quality) {
+      const rows = [
+        ["Atribuicoes ambiguas", quality.ambiguous_attributions],
+        ["Entregas medias em 7 dias", quality.average_deliveries_7],
+        ["Entregas medias em 30 dias", quality.average_deliveries_30],
+        ["Segmentos de entrada divergentes", quality.segment_mismatches]
+      ];
+      return `<div class="source-list">${rows.map(([label, metric]) => `<div class="source-row"><strong>${escapeHtml(label)}</strong><span class="status-${escapeHtml(metric && metric.status || "unavailable")}">${escapeHtml(metric && metric.display || "Indisponivel")}</span><span class="hint">${escapeHtml(metric && metric.definition || "Fonte ainda nao instrumentada.")}</span></div>`).join("")}</div>`;
+    }
+
+    function availabilityBlock(rows) {
+      if (!rows.length) return `<div class="empty">Cobertura nao informada.</div>`;
+      const labels = {
+        confirmed: "Confirmado",
+        derivable: "Derivavel",
+        absent: "Ausente",
+        pending_validation: "Pendente de validacao"
+      };
+      return `<div class="source-list">${rows.map(row => {
+        const coverage = row.start_at || row.end_at
+          ? ` Cobertura: ${row.start_at ? row.start_at.slice(0, 10) : "?"} a ${row.end_at ? row.end_at.slice(0, 10) : "?"}.`
+          : "";
+        const freshness = row.updated_at
+          ? ` Atualizado em ${row.updated_at.slice(0, 10)}${row.delay_days === null ? "" : `; atraso de ${row.delay_days} dia(s)`}.`
+          : "";
+        return `<div class="source-row"><strong>${escapeHtml(row.label)}</strong><span class="status-${escapeHtml(row.status)}">${escapeHtml(labels[row.status] || row.status)}</span><span class="hint">${escapeHtml(row.detail + coverage + freshness)}</span></div>`;
+      }).join("")}</div>`;
+    }
+
+    function kpi(label, value, hint) {
+      return `<div class="card"><div class="label">${escapeHtml(label)}</div><div class="value">${escapeHtml(String(value))}</div><div class="hint">${escapeHtml(hint)}</div></div>`;
+    }
+
+    function section(title, description, body) {
+      return `<section><div class="section-head"><div><h2>${escapeHtml(title)}</h2><div class="hint">${escapeHtml(description)}</div></div></div>${body}</section>`;
+    }
+
+    function ticketTable(rows) {
+      return table(["Faixa", "Pessoas", "Valor pago", "% receita"], rows.map(row => [
+        `<strong>${escapeHtml(row.label)}</strong><br><span class="hint">${escapeHtml(row.rule)}</span>`,
+        row.paid_people,
+        row.paid_amount,
+        row.revenue_share
+      ]));
+    }
+
+    function methodTable(rows) {
+      return table(["Metodo", "Tentativas", "Pagas", "Em aberto", "Falhas", "Valor pago", "Conv."], rows.map(row => [
+        row.method,
+        row.attempts,
+        row.paid_charges,
+        row.open_charges,
+        row.failure_charges,
+        row.paid_amount,
+        row.conversion_rate
+      ]));
+    }
+
+    function statusTable(rows) {
+      return table(["Status", "Grupo", "Pessoas", "Cobrancas", "Valor tentado"], rows.map(row => [
+        `<strong>${escapeHtml(row.label)}</strong><br><span class="hint">${escapeHtml(row.status)}</span>`,
+        row.group,
+        row.people,
+        row.charges,
+        row.attempted_amount
+      ]));
+    }
+
+    function table(headers, rows) {
+      const numeric = new Set(["Pessoas", "Tentativas", "Pagas", "Em aberto", "Falhas", "Cobrancas", "Valor pago", "Valor tentado", "Conv.", "% receita"]);
+      return `<table><thead><tr>${headers.map(h => `<th class="${numeric.has(h) ? "num" : ""}">${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${row.map((cell, i) => `<td class="${numeric.has(headers[i]) ? "num" : ""}">${cell}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+    }
+
+    function alerts(rows) {
+      return `<div class="alert-list">${rows.map(row => `<div class="alert ${escapeHtml(row.level)}"><div class="alert-title">${escapeHtml(row.title)}</div><div class="hint">${escapeHtml(row.body)}</div></div>`).join("")}</div>`;
+    }
+
+    function dailyBars(rows) {
+      const max = Math.max(1, ...rows.map(row => Number(row.paid_amount_raw || 0)));
+      return `<div class="bar-list">${rows.map(row => {
+        const width = Math.max(2, Math.round((Number(row.paid_amount_raw || 0) / max) * 100));
+        return `<div class="bar-row"><div class="bar-meta"><span>${escapeHtml(row.date)}</span><span>${escapeHtml(row.paid_amount)} | ${row.paid_people} pessoa(s)</span></div><div class="track"><div class="fill" style="width:${width}%"></div></div><div class="hint">${row.attempts} tentativa(s), ${row.paid_charges} paga(s)</div></div>`;
+      }).join("")}</div>`;
+    }
+
+    function recurrenceBlock(row) {
+      return `
+        <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
+          ${kpi("Intencao recorrente", row.intention_people, "Frequency diferente de OneTime.")}
+          ${kpi("Intencao mensal", row.monthly_intention_people, "Frequency = Monthly.")}
+          ${kpi("Pagaram recorrente", row.recurring_paid_people, row.recurring_paid_amount)}
+          ${kpi("Recorrencia observada", row.recurrence_confirmed_people, "Pagamentos em mais de um mes dentro do periodo.")}
+        </div>
+        <div class="notes">${escapeHtml(row.note)}</div>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Snapshot estatico: filtros de servidor foram removidos.
+
+    loadDashboard();
+  </script>
+</body>
+</html>
