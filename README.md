@@ -2,8 +2,8 @@
 
 Snapshot publico e estatico dos indicadores agregados de doacoes da Atados.
 
-- periodo publicado: 01/11/2024 a 29/08/2026;
-- ultima atualizacao: 29/08/2026;
+- periodo publicado: 01/11/2024 a 30/08/2026;
+- ultima atualizacao: 30/08/2026;
 - fonte dos agregados: TrackMob;
 - atualizacao: automatica (diaria);
 - privacidade: nao contem nomes, e-mails, documentos, telefones, tokens ou IDs individuais.
