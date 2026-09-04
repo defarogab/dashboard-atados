@@ -326,7 +326,7 @@
         <div class="card" style="grid-column: 1 / -1; padding: 12px 14px;">
           <div class="label">Snapshot publico</div>
           <div><strong>01/11/2024 a 03/09/2026</strong></div>
-          <div class="hint">Atualizado em 04/09/2026 as 01:30. Atualizacao automatica diaria.</div>
+          <div class="hint">Atualizado em 04/09/2026 as 01:59. Atualizacao automatica diaria.</div>
         </div>
       </div>
     </header>
@@ -451,7 +451,28 @@
 
         ${campaignDashboard(data.campaigns)}
         ${emailCampaignsSection(data.email_campaigns)}
+        ${emailWorkflowsSection(data.email_workflows)}
       `;
+    }
+
+    function emailWorkflowsSection(emailWorkflows) {
+      if (!emailWorkflows) return "";
+      const description = "Numeros agregados por automacao/fluxo (ex: jornadas TrackMob), direto do RD Station. Nao identifica pessoas.";
+      if (emailWorkflows.status !== "available" || !emailWorkflows.rows.length) {
+        return section("Automacoes de e-mail (RD Station)", description, `<div class="empty">Dados ainda indisponiveis.</div>`);
+      }
+      return section("Automacoes de e-mail (RD Station)", description, table(
+        ["Automacao", "Entregues", "Abertura", "Clique", "Descad.", "Bounce", "Denuncia spam"],
+        emailWorkflows.rows.map(row => [
+          escapeHtml(row.workflow_name),
+          `${row.delivered_count} <span class="hint">(${escapeHtml(row.delivered_rate)})</span>`,
+          escapeHtml(row.opened_rate),
+          escapeHtml(row.clicked_rate),
+          row.unsubscribed_count,
+          row.bounced_count,
+          escapeHtml(row.spam_reported_rate)
+        ])
+      ));
     }
 
     function emailCampaignsSection(emailCampaigns) {
