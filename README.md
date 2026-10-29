@@ -2,8 +2,8 @@
 
 Snapshot publico e estatico dos indicadores agregados de doacoes da Atados.
 
-- periodo publicado: 01/11/2024 a 28/10/2026;
-- ultima atualizacao: 28/10/2026;
+- periodo publicado: 01/11/2024 a 29/10/2026;
+- ultima atualizacao: 29/10/2026;
 - fonte dos agregados: TrackMob (doacoes), Google Analytics 4 (aquisicao, aba propria; pagamentos e receita do GA4 nao sao o valor oficial) e Google Ads via GA4 (aba propria; investimento e credito Ad Grants, nao dinheiro do Atados);
 - atualizacao: automatica (diaria);
 - data.json: os mesmos agregados que estao dentro da pagina, em JSON;
